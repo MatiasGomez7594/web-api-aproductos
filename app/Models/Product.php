@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
      // Esto permite que estos campos se llenen automáticamente
-    protected $fillable = ['nombre', 'precio'];
+    protected $fillable = ['nombre', 'precio','stock'];
 
     
 }

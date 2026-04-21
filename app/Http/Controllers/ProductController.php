@@ -21,13 +21,22 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    
-    public function store(Request $request)
-    {
-        $producto = Product::create($request->all());
-        // Devolvemos el producto creado con el código 201
-        return response()->json($producto, 201);
-    }
+// App/Http/Controllers/ProductController.php
+public function store(Request $request)
+{
+    // 1. Validamos los datos
+    $validated = $request->validate([
+        'nombre' => 'required|string|max:255',
+        'precio' => 'required|numeric|min:1',
+        'stock'  => 'required|integer|min:1',
+    ]);
+
+    // 2. Creamos el producto
+    \App\Models\Product::create($validated);
+
+    // 3. Redireccionamos (Inertia refrescará los datos automáticamente)
+    return redirect()->back();
+}
 
 
     /**
@@ -49,23 +58,19 @@ public function show($id)
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, $id)
     {
-        //
-         // Buscamos el producto por el ID que viene en la URL
-        $product = Product::find($id);
-            // Si no existe, devolvemos un error 404
-        if (!$product) {
-        return response()->json(['error' => 'Producto no encontrado'], 404);
-        }
-        // 3. Actualizamos con los datos que vienen en el Request
-        $product->update($request->all());
-
-        // 4. Devolvemos el producto ya actualizado
-        return response()->json([
-            'mensaje' => 'Producto actualizado con éxito',
-            'producto' => $product
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'precio' => 'required|numeric|min:1',
+            'stock'  => 'required|integer|min:1',
         ]);
+
+        $producto = \App\Models\Product::findOrFail($id);
+        $producto->update($validated);
+
+        return redirect()->back();
     }
 
     /**
@@ -73,14 +78,10 @@ public function show($id)
      */
     public function destroy($id)
     {
-        // destroy() devuelve el número de filas eliminadas (0 o 1)
-        $filasEliminadas = Product::destroy($id);
+        $producto = \App\Models\Product::findOrFail($id);
+        $producto->delete();
 
-        if ($filasEliminadas === 0) {
-            return response()->json(['error' => 'El producto no existe o ya fue eliminado'], 404);
-        }
-
-        return response()->json(['exito' => 'Producto eliminado'], 200);
+        return redirect()->back();
     }
 
     
