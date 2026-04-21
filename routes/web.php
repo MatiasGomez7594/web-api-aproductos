@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Product; 
+use App\Http\Controllers\ProductController;
 
 // --- RUTAS PÚBLICAS ---
 Route::get('/', function () {
@@ -16,13 +17,6 @@ Route::get('/', function () {
     ]);
 });
 
-// --- RUTA DASHBOARD (UNIFICADA) ---
-// Agrupamos todo lo que necesita el Dashboard aquí
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard', [
-        'productos' => Product::all(), // Traemos los productos de la DB
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 // --- RUTAS DE PERFIL ---
 Route::middleware('auth')->group(function () {
@@ -31,14 +25,21 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::post('/productos', [App\Http\Controllers\ProductController::class, 'store'])
-    ->middleware(['auth', 'verified']);
 
-Route::delete('/productos/{id}', [App\Http\Controllers\ProductController::class, 'destroy'])
-    ->middleware(['auth', 'verified'])
-    ->name('productos.destroy');
 
-// routes/web.php
-Route::put('/productos/{id}', [App\Http\Controllers\ProductController::class, 'update'])
-    ->name('productos.update');
+    // routes/web.php
+
+// El Dashboard lo ven todos los logueados
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard', [
+        'productos' => App\Models\Product::all(),
+    ]);
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+// SOLO EL ADMIN puede crear, editar o borrar
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::post('/productos', [ProductController::class, 'store']);
+    Route::put('/productos/{id}', [ProductController::class, 'update']);
+    Route::delete('/productos/{id}', [ProductController::class, 'destroy']);
+});
 require __DIR__.'/auth.php';
