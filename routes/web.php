@@ -42,4 +42,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/productos/{id}', [ProductController::class, 'update']);
     Route::delete('/productos/{id}', [ProductController::class, 'destroy']);
 });
+
+// routes/web.php
+use App\Http\Controllers\SaleController;
+
+
+Route::middleware(['auth'])->group(function () {
+    // Agregamos esta línea para que Laravel "escuche" la petición /ventas
+    Route::post('/ventas', [SaleController::class, 'store'])->name('ventas.store');
+});
 require __DIR__.'/auth.php';

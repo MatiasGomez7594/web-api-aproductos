@@ -27,6 +27,15 @@ export default function Register() {
     };
 
     return (
+        <>
+        <div className="fixed top-5 left-5 z-50">
+            <Link 
+                href="/" 
+                className="text-sm font-medium text-gray-500 hover:underline hover:text-gray-700 "
+            >
+                Inicio
+            </Link>
+        </div>
         <GuestLayout>
             <Head title="Register" />
 
@@ -113,5 +122,6 @@ export default function Register() {
                 </div>
             </form>
         </GuestLayout>
+        </>
     );
 }

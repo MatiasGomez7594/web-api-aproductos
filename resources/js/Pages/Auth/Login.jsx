@@ -27,11 +27,21 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
+        <>
+        <div className="fixed top-5 left-5 z-50">
+            <Link 
+                href="/" 
+                className="text-sm font-medium text-gray-500 hover:underline hover:text-gray-700 "
+            >
+                Inicio
+            </Link>
+        </div>
+
         <GuestLayout>
             <Head title="Log in" />
+            
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
-
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
@@ -93,5 +103,6 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             </form>
         </GuestLayout>
+        </>
     );
 }
