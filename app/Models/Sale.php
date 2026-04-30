@@ -11,16 +11,30 @@ class Sale extends Model
 
     // Agregamos las columnas que Laravel tiene permitido llenar
     protected $fillable = [
-        'product_id',
-        'cantidad',
+        'cliente_id',
         'monto',
         'fecha_venta',
+        'medio_pago_id'
     ];
     
     // Tip extra: Relación con el producto
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+        // Tip extra: Relación con el producto
+
+
+    public function details() {
+        return $this->hasMany(SaleDetail::class);
+    }
+
+    public function medioPago() {
+        return $this->belongsTo(MedioPago::class);
+    }
+
+    public function cliente() {
+        return $this->belongsTo(User::class, 'cliente_id'); 
     }
 }
 

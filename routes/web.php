@@ -32,7 +32,9 @@ Route::middleware('auth')->group(function () {
 // El Dashboard lo ven todos los logueados
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', [
-        'productos' => App\Models\Product::all(),
+        'productos' => Product::all(), // Traemos los productos para el carrito
+        'mediosPago' => App\Models\MedioPago::all(),
+
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -43,12 +45,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/productos/{id}', [ProductController::class, 'destroy']);
 });
 
+
 // routes/web.php
 use App\Http\Controllers\SaleController;
 
-
+//RUTAS PARA EL VENDEDOR
 Route::middleware(['auth'])->group(function () {
     // Agregamos esta línea para que Laravel "escuche" la petición /ventas
     Route::post('/ventas', [SaleController::class, 'store'])->name('ventas.store');
 });
+
+Route::get('/buscar-cliente', [SaleController::class, 'buscarCliente']);
+
 require __DIR__.'/auth.php';

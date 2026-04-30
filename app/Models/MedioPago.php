@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MedioPago extends Model
 {
     use HasFactory;
+        public $timestamps = false;
+
+    protected $fillable = ['nombre'];
 }
