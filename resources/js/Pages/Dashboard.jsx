@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head}  from '@inertiajs/react'; // Agregamos router aqui para eliminar
+import { Head,Link}  from '@inertiajs/react'; // Agregamos router aqui para eliminar
 
 import ProductForm from '@/Components/ProductForm'; // <-- IMPORTAMOS EL NUEVO COMPONENTE formproduct
 
@@ -15,10 +15,18 @@ export default function Dashboard({ auth, productos = [] ,mediosPago=[]}) {
     //console.log("Productos:", productos);
 //console.log("Medios de Pago:", mediosPago);
     return (
+        
         <AuthenticatedLayout
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Gestión de Stock</h2>}
         >
+            {isAdmin && (<Link
+        href={route('vendedores')}
+        className="ms-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+        >
+        Ver Vendedores
+        </Link>)}
+
             <Head title="Dashboard" />
 
             <div className="py-12">

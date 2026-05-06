@@ -84,5 +84,19 @@ public function show($id)
         return redirect()->back();
     }
 
+
+//esto es para usar la api desde un servidor externo
+public function indexApi()
+{
+    // Obtenemos los productos
+    $productos = \App\Models\Product::where('stock', '>', 0)->get();
+
+    // Devolvemos JSON puro para que el HTML/JS externo lo entienda
+    return response()->json([
+        'status' => 'success',
+        'data' => $productos
+    ], 200);
+}
+
     
 }

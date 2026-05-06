@@ -35,6 +35,7 @@ Route::get('/dashboard', function () {
         'productos' => Product::all(), // Traemos los productos para el carrito
         'mediosPago' => App\Models\MedioPago::all(),
 
+
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -43,8 +44,19 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/productos', [ProductController::class, 'store']);
     Route::put('/productos/{id}', [ProductController::class, 'update']);
     Route::delete('/productos/{id}', [ProductController::class, 'destroy']);
+    Route::post('/vendedores', [ProfileController::class, 'storeVendedor']);
+    Route::put('/vendedores/{id}', [ProfileController::class, 'updateVendedor']);
+    Route::delete('/vendedores/{id}', [ProfileController::class, 'destroyVendedor']);
 });
 
+// routes/web.php
+
+// Esta es la ruta para ver vendedores
+Route::get('/vendedores', function () {
+    return Inertia::render('vendedores/DashboardVendedores', [
+        'vendedores' => \App\Models\User::where('role', 'vendedor')->get(),
+    ]);
+})->middleware(['auth', 'verified'])->name('vendedores'); // <--- El nombre es clave
 
 // routes/web.php
 use App\Http\Controllers\SaleController;
@@ -57,4 +69,11 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/buscar-cliente', [SaleController::class, 'buscarCliente']);
 
+
+//RUTA DE INICIO PARA LOS CLIENTES
+Route::get('/tienda', function () {
+    return Inertia::render('Client/Catalogo', [
+        'productos' => \App\Models\Product::where('stock', '>', 0)->get()
+    ]);
+});
 require __DIR__.'/auth.php';
